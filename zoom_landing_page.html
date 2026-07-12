@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zoom — Getting the work done is hard enough</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:        #2D8CFF;
+      --blue-dark:   #1A6FE0;
+      --blue-pale:   #EEF5FF;
+      --blue-mid:    #DDEEFF;
+      --ink:         #111827;
+      --ink-2:       #1F2937;
+      --body:        #FFFFFF;
+      --section-bg:  #F9FAFB;
+      --border:      #E5E7EB;
+      --muted:       #6B7280;
+      --muted-light: #9CA3AF;
+      --white:       #FFFFFF;
+      --font-display:'Syne', sans-serif;
+      --font-body:   'Inter', sans-serif;
+      --radius:      12px;
+      --radius-sm:   8px;
+      --shadow-sm:   0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md:   0 4px 20px rgba(0,0,0,0.08);
+      --shadow-lg:   0 12px 48px rgba(0,0,0,0.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--body);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: var(--shadow-md); }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+      background: var(--blue);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon svg { width: 18px; height: 18px; fill: white; }
+    .nav-logo-text {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+
+    .btn-ghost {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+    .btn-blue {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      background: var(--blue);
+      border: none;
+      padding: 9px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-blue:hover {
+      background: var(--blue-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(45,140,255,0.35);
+    }
+
+    /* ── HERO ── */
+    .hero-wrap {
+      padding-top: 64px;
+      background: var(--white);
+    }
+    .hero {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 88px 60px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue-pale);
+      border: 1px solid rgba(45,140,255,0.2);
+      color: var(--blue-dark);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      background: var(--blue);
+      border-radius: 50%;
+      animation: blink 2s infinite;
+    }
+    @keyframes blink {
+      0%,100% { opacity:1; }
+      50% { opacity:0.3; }
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 4.5vw, 54px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--blue);
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 460px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .btn-blue-lg {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--white);
+      background: var(--blue);
+      border: none;
+      padding: 14px 30px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-blue-lg:hover {
+      background: var(--blue-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(45,140,255,0.35);
+    }
+
+    .btn-outline-lg {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ink);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 14px 30px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-outline-lg:hover { border-color: var(--blue); color: var(--blue); }
+
+    .hero-trust {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted-light);
+    }
+    .hero-trust-check { color: var(--blue); font-weight: 700; }
+
+    /* Hero visual */
+    .hero-visual {
+      position: relative;
+      padding-bottom: 40px;
+    }
+
+    .meeting-card {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .meeting-topbar {
+      background: var(--ink-2);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topbar-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #FF5F56; }
+    .dot-yellow { background: #FFBD2E; }
+    .dot-green { background: #27C93F; }
+    .topbar-title {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      font-weight: 500;
+    }
+
+    .meeting-body { padding: 20px; }
+
+    .participants-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .participant {
+      background: var(--section-bg);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+    .participant.speaking {
+      background: var(--blue-pale);
+      border: 1.5px solid rgba(45,140,255,0.3);
+    }
+    .participant-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .participant-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .speaking-indicator {
+      position: absolute;
+      bottom: 8px; right: 8px;
+      display: flex;
+      gap: 2px;
+      align-items: flex-end;
+    }
+    .speaking-bar {
+      width: 3px;
+      background: var(--blue);
+      border-radius: 2px;
+      animation: wave 1s ease-in-out infinite;
+    }
+    .speaking-bar:nth-child(1) { height: 6px; animation-delay: 0s; }
+    .speaking-bar:nth-child(2) { height: 10px; animation-delay: 0.15s; }
+    .speaking-bar:nth-child(3) { height: 7px; animation-delay: 0.3s; }
+    @keyframes wave {
+      0%,100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.5); }
+    }
+
+    .meeting-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px 0 4px;
+      border-top: 1px solid var(--border);
+    }
+    .toolbar-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--section-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .toolbar-btn:hover { background: var(--blue-pale); border-color: var(--blue); }
+    .toolbar-btn.end {
+      background: #FEE2E2;
+      border-color: #FECACA;
+    }
+
+    .meeting-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: var(--section-bg);
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .status-dot-live {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+      animation: blink 1.5s infinite;
+    }
+
+    /* Floating elements */
+    .float-card {
+      position: absolute;
+      background: var(--white);
+      border-radius: 10px;
+      padding: 10px 14px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink);
+      animation: floatY 3s ease-in-out infinite;
+    }
+    @keyframes floatY {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .float-top { top: -16px; right: -16px; animation-delay: 0.3s; }
+    .float-bottom { bottom: 16px; left: -16px; animation-delay: 0.8s; }
+    .float-icon { font-size: 16px; }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: var(--ink-2);
+      padding: 0 60px;
+    }
+    .stats-bar-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-around;
+    }
+    .stat-item {
+      padding: 28px 20px;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      flex: 1;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+    .stat-number span { color: var(--blue); }
+    .stat-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      margin-top: 4px;
+    }
+
+    /* ── PROBLEM ── */
+    .problem-section {
+      padding: 96px 60px;
+      background: var(--section-bg);
+    }
+    .problem-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .section-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    .problem-lead {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+    .problem-lead strong { color: var(--ink); font-weight: 600; }
+
+    .scenario-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .scenario {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: all 0.25s;
+    }
+    .scenario:hover {
+      border-color: rgba(45,140,255,0.25);
+      box-shadow: var(--shadow-sm);
+      transform: translateX(4px);
+    }
+    .scenario-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .scenario-text {
+      font-size: 15px;
+      color: var(--ink-2);
+      line-height: 1.65;
+    }
+    .scenario-text strong { color: var(--ink); font-weight: 600; }
+
+    .problem-consequence {
+      margin-top: 28px;
+      padding: 24px 28px;
+      background: #FFF8F8;
+      border: 1px solid #FECACA;
+      border-radius: var(--radius);
+    }
+    .consequence-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #DC2626;
+      margin-bottom: 10px;
+    }
+    .consequence-text {
+      font-size: 15px;
+      color: var(--ink-2);
+      line-height: 1.7;
+    }
+
+    /* Problem visual */
+    .problem-visual {
+      position: relative;
+    }
+
+    .error-screen {
+      background: var(--ink-2);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    .error-topbar {
+      background: rgba(255,255,255,0.05);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .error-body {
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .error-icon { font-size: 40px; margin-bottom: 16px; }
+    .error-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .error-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 20px;
+    }
+    .error-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .apps-scatter {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    .app-chip {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ── SOLUTION ── */
+    .solution-section {
+      padding: 96px 60px;
+      background: var(--white);
+      text-align: center;
+    }
+    .solution-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .solution-inner .section-title { margin-bottom: 16px; }
+    .solution-inner p {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 12px;
+    }
+    .solution-inner p strong { color: var(--ink); font-weight: 600; }
+    .solution-highlight {
+      display: inline-block;
+      margin-top: 24px;
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: -0.3px;
+    }
+
+    /* ── FEATURES ── */
+    .features-section {
+      padding: 96px 60px;
+      background: var(--section-bg);
+    }
+    .features-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+    .features-inner .section-title { max-width: 500px; margin-bottom: 56px; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--blue);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(45,140,255,0.2);
+    }
+    .feature-card:hover::before { transform: scaleX(1); }
+
+    .feature-icon-wrap {
+      width: 48px; height: 48px;
+      background: var(--blue-pale);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 10px;
+      letter-spacing: -0.2px;
+    }
+
+    .feature-card p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .feature-tagline {
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    /* ── SOCIAL PROOF ── */
+    .proof-section {
+      padding: 96px 60px;
+      background: var(--ink-2);
+    }
+    .proof-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+    .proof-inner .section-eyebrow { color: var(--blue); }
+    .proof-inner .section-title { color: var(--white); margin-bottom: 48px; }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 36px;
+      transition: all 0.25s;
+    }
+    .testimonial-card:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(45,140,255,0.3);
+      transform: translateY(-3px);
+    }
+
+    .quote-mark {
+      font-family: var(--font-display);
+      font-size: 52px;
+      font-weight: 800;
+      color: var(--blue);
+      opacity: 0.4;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .testimonial-card blockquote {
+      font-size: 15px;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.78;
+      font-style: italic;
+      margin-bottom: 28px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .author-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), #60A5FA);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .author-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--white);
+    }
+    .author-role {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 2px;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 96px 60px;
+      background: var(--white);
+    }
+    .cta-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+    .cta-card {
+      background: var(--blue);
+      border-radius: 20px;
+      padding: 72px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 320px; height: 320px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+    .cta-card::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 240px; height: 240px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+
+    .cta-content { position: relative; z-index: 1; }
+
+    .cta-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 20px;
+    }
+
+    .cta-card h2 {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .cta-lines {
+      margin-bottom: 40px;
+    }
+    .cta-lines p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.7;
+    }
+    .cta-lines p.cta-closer {
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--white);
+      margin-top: 8px;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-cta-white {
+      background: var(--white);
+      color: var(--blue-dark);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 15px 36px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    .btn-cta-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    .btn-cta-outline {
+      background: transparent;
+      color: var(--white);
+      font-size: 16px;
+      font-weight: 500;
+      padding: 15px 36px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.35);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    .btn-cta-outline:hover { border-color: rgba(255,255,255,0.7); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink-2);
+      padding: 28px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    footer p { font-size: 13px; color: rgba(255,255,255,0.35); }
+    footer p span { color: var(--blue); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 72px 24px 0; gap: 48px; }
+      .hero-visual { display: none; }
+      .stats-bar { padding: 0 24px; }
+      .stats-bar-inner { flex-wrap: wrap; }
+      .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); flex: 0 0 50%; }
+      .problem-section { padding: 64px 24px; }
+      .problem-inner { grid-template-columns: 1fr; gap: 48px; }
+      .problem-visual { display: none; }
+      .solution-section { padding: 64px 24px; }
+      .features-section { padding: 64px 24px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .proof-section { padding: 64px 24px; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .cta-section { padding: 64px 24px; }
+      .cta-card { padding: 48px 28px; }
+      footer { padding: 24px; flex-direction: column; text-align: center; }
+      .footer-links { justify-content: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; }
+      .badge-dot, .status-dot-live, .speaking-bar, .float-card { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 8.5V15.5L20 18V6L15 8.5Z"/>
+          <rect x="4" y="6" width="10" height="12" rx="2"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">Zoom</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Products</a></li>
+      <li><a href="#">Solutions</a></li>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">Resources</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="#" class="btn-ghost">Sign in</a>
+      <a href="#" class="btn-blue">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrap">
+    <div class="hero">
+      <div>
+        <div class="hero-badge reveal">
+          <span class="badge-dot"></span>
+          Built for remote teams
+        </div>
+        <h1 class="reveal reveal-delay-1">
+          Getting the work done<br/>is hard enough.<br/><em>Presenting it</em><br/>shouldn't be.
+        </h1>
+        <p class="hero-sub reveal reveal-delay-2">
+          Zoom gives your team one place to stay in control, stay connected, and stay focused.
+        </p>
+        <div class="hero-actions reveal reveal-delay-3">
+          <a href="#" class="btn-blue-lg">Get Started Free</a>
+          <a href="#" class="btn-outline-lg">See how it works</a>
+        </div>
+        <div class="hero-trust reveal reveal-delay-4">
+          <span class="hero-trust-check">✓</span> Free to start &nbsp;·&nbsp;
+          <span class="hero-trust-check">✓</span> No credit card &nbsp;·&nbsp;
+          <span class="hero-trust-check">✓</span> Set up in minutes
+        </div>
+      </div>
+
+      <div class="hero-visual reveal reveal-delay-2">
+        <div style="position: relative; padding: 20px;">
+          <div class="meeting-card">
+            <div class="meeting-topbar">
+              <span class="topbar-dot dot-red"></span>
+              <span class="topbar-dot dot-yellow"></span>
+              <span class="topbar-dot dot-green"></span>
+              <span class="topbar-title">Team Standup · 09:30 AM</span>
+            </div>
+            <div class="meeting-body">
+              <div class="participants-grid">
+                <div class="participant speaking">
+                  <div class="participant-avatar" style="background: #2D8CFF;">AK</div>
+                  <span class="participant-name">Amara K.</span>
+                  <div class="speaking-indicator">
+                    <div class="speaking-bar"></div>
+                    <div class="speaking-bar"></div>
+                    <div class="speaking-bar"></div>
+                  </div>
+                </div>
+                <div class="participant">
+                  <div class="participant-avatar" style="background: #7C3AED;">JT</div>
+                  <span class="participant-name">James T.</span>
+                </div>
+                <div class="participant">
+                  <div class="participant-avatar" style="background: #059669;">SR</div>
+                  <span class="participant-name">Sarah R.</span>
+                </div>
+                <div class="participant">
+                  <div class="participant-avatar" style="background: #DC2626;">MO</div>
+                  <span class="participant-name">Mike O.</span>
+                </div>
+              </div>
+              <div class="meeting-toolbar">
+                <div class="toolbar-btn">🎤</div>
+                <div class="toolbar-btn">📷</div>
+                <div class="toolbar-btn">💬</div>
+                <div class="toolbar-btn">🖥️</div>
+                <div class="toolbar-btn end">📵</div>
+              </div>
+            </div>
+            <div class="meeting-status">
+              <span class="status-dot-live"></span>
+              Connected · 00:14:32 · HD Quality · All participants stable
+            </div>
+          </div>
+
+          <div class="float-card float-top">
+            <span class="float-icon">✅</span>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#111827">Decision made</div>
+              <div style="font-size:10px;color:#9CA3AF">Campaign approved · just now</div>
+            </div>
+          </div>
+
+          <div class="float-card float-bottom">
+            <span class="float-icon">📝</span>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#111827">Auto transcript ready</div>
+              <div style="font-size:10px;color:#9CA3AF">Saved to workspace</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats bar sits flush under hero -->
+    <div class="stats-bar" style="margin-top: 60px;">
+      <div class="stats-bar-inner">
+        <div class="stat-item reveal">
+          <div class="stat-number">300<span>M+</span></div>
+          <div class="stat-label">Daily meeting participants</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-1">
+          <div class="stat-number">190<span>+</span></div>
+          <div class="stat-label">Countries connected</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-2">
+          <div class="stat-number">99<span>.9%</span></div>
+          <div class="stat-label">Uptime reliability</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-3">
+          <div class="stat-number">40<span>+</span></div>
+          <div class="stat-label">Languages supported</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROBLEM -->
+  <div class="problem-section">
+    <div class="problem-inner">
+      <div>
+        <p class="section-eyebrow reveal">The remote work reality</p>
+        <h2 class="section-title reveal">No one talks about the hard days.</h2>
+        <p class="problem-lead reveal">
+          The remote industry is heavily praised for its flexibility and potential financial freedom. But <strong>no one talks about the days when no one sees you putting in the extra hours</strong> just to get the work done to perfection.
+        </p>
+
+        <div class="scenario-list">
+          <div class="scenario reveal">
+            <span class="scenario-icon">📵</span>
+            <p class="scenario-text">You're in a meeting — everyone's pitching, and <strong>just before it gets to your turn, the app crashes.</strong> You find yourself struggling to reload the page and get back into the discussion.</p>
+          </div>
+          <div class="scenario reveal reveal-delay-1">
+            <span class="scenario-icon">🗂️</span>
+            <p class="scenario-text">You're working on one project — but you have <strong>MS Word, Calendar and Notion open and running</strong> all at the same time. Three tools. One task.</p>
+          </div>
+          <div class="scenario reveal reveal-delay-2">
+            <span class="scenario-icon">🧠</span>
+            <p class="scenario-text">The meeting was successful — but it's over, and <strong>now you're trying to remember what was said</strong> at one point or another.</p>
+          </div>
+        </div>
+
+        <div class="problem-consequence reveal reveal-delay-3">
+          <div class="consequence-label">The real cost</div>
+          <p class="consequence-text">Three flaws all working against you — and none of them are your fault. One makes you look incompetent, like you're unable to deliver. And the others? A clumsy setup that leaves you feeling disorganized across too many apps. <strong>This setback is mentally draining and pushes your productivity backwards.</strong></p>
+        </div>
+      </div>
+
+      <div class="problem-visual reveal reveal-delay-1">
+        <div class="error-screen">
+          <div class="error-topbar">
+            <span class="topbar-dot dot-red"></span>
+            <span class="topbar-dot dot-yellow"></span>
+            <span class="topbar-dot dot-green"></span>
+          </div>
+          <div class="error-body">
+            <div class="error-icon">⚠️</div>
+            <div class="error-title">Connection Lost</div>
+            <div class="error-sub">Your meeting was disconnected.<br/>Attempting to reconnect…</div>
+            <button class="error-btn">Rejoin Meeting</button>
+          </div>
+        </div>
+
+        <div class="apps-scatter">
+          <div class="app-chip">📄 <span>MS Word</span></div>
+          <div class="app-chip">📅 <span>Calendar</span></div>
+          <div class="app-chip">📋 <span>Notion</span></div>
+          <div class="app-chip">📧 <span>Gmail</span></div>
+          <div class="app-chip">💬 <span>Slack</span></div>
+          <div class="app-chip">📊 <span>Sheets</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLUTION -->
+  <div class="solution-section">
+    <div class="solution-inner">
+      <p class="section-eyebrow reveal">Enter Zoom</p>
+      <h2 class="section-title reveal">Zoom understands this.<br/>Your effort should get its accolades.</h2>
+      <p class="reveal">Zoom gives you and your team reliability.</p>
+      <p class="reveal">Now you can communicate, control, decide, and monitor all your projects with confidence.</p>
+      <span class="solution-highlight reveal">One space. Full clarity. Real results.</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features-section">
+    <div class="features-inner">
+      <p class="section-eyebrow reveal">Built for remote teams</p>
+      <h2 class="section-title reveal">Built for how remote teams actually work.</h2>
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon-wrap">🔗</div>
+          <h3>Frictionless Conversations</h3>
+          <p>Talk for hours without network failures, glitches, or lag.</p>
+          <p class="feature-tagline">Smooth conversations · Better communication · More productivity</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon-wrap">⚡</div>
+          <h3>One System, Every Tool</h3>
+          <p>Discuss, collaborate, and edit from one space. You don't need five different apps to get the job done. Just one that understands you and your team.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon-wrap">👁️</div>
+          <h3>Let Your Work Speak for Itself</h3>
+          <p>You've done the hard part. Zoom makes it easy for your team to see it — recordings, transcripts, follow-ups, all automatic.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOCIAL PROOF -->
+  <div class="proof-section">
+    <div class="proof-inner">
+      <p class="section-eyebrow reveal">Social proof</p>
+      <h2 class="section-title reveal">Real teams. Real results.</h2>
+      <div class="testimonials-grid">
+        <div class="testimonial-card reveal">
+          <div class="quote-mark">"</div>
+          <blockquote>I used to lose ideas switching between too many apps, and half my team would drop off calls. Now I run smooth meetings in one place. Last week, we made a major campaign decision in under 30 minutes. Zoom made it effortless.</blockquote>
+          <div class="testimonial-author">
+            <div class="author-avatar">PZ</div>
+            <div>
+              <div class="author-name">Patrick Zeng</div>
+              <div class="author-role">Marketing Team Leader · Shadles Corporations</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal reveal-delay-1">
+          <div class="quote-mark">"</div>
+          <blockquote>App switching and missed follow-ups were draining my team. With Zoom, we held a key investor meeting last month where everyone stayed engaged. The recording and transcript feature made follow-up instant — and we closed the deal.</blockquote>
+          <div class="testimonial-author">
+            <div class="author-avatar">PT</div>
+            <div>
+              <div class="author-name">Phoebe Thunderman</div>
+              <div class="author-role">CEO · Vault LTD</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-inner">
+      <div class="cta-card reveal">
+        <div class="cta-content">
+          <p class="cta-eyebrow">Get started today</p>
+          <h2>Communication makes a team.</h2>
+          <div class="cta-lines">
+            <p>Your effort deserves to be seen.</p>
+            <p>Your team deserves to function at its best.</p>
+            <p class="cta-closer">Yours is ready — you just need the right space to make it exceptional.</p>
+          </div>
+          <div class="cta-actions">
+            <a href="#" class="btn-cta-white">Get Started Free</a>
+            <a href="#" class="btn-cta-outline">Talk to Sales</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Zoom Video Communications, Inc. &nbsp;·&nbsp; Spec work by <span>Ike</span> — Copywriting Portfolio</p>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Accessibility</a>
+      <a href="#">Support</a>
+    </div>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+</body>
+</html>

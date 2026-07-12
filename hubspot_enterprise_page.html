@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HubSpot — The Operating System for Growth-Minded Marketing Organizations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange:       #FF5C35;
+      --orange-dark:  #E04A26;
+      --orange-pale:  #FFF3F0;
+      --orange-mid:   #FFE4DD;
+      --ink:          #111111;
+      --ink-2:        #1C1C1C;
+      --ink-3:        #2A2A2A;
+      --body:         #FFFFFF;
+      --section-bg:   #F8F8F6;
+      --border:       #E8E8E4;
+      --muted:        #6B6B6B;
+      --muted-light:  #9B9B9B;
+      --white:        #FFFFFF;
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'Inter', sans-serif;
+      --radius:       14px;
+      --radius-sm:    8px;
+      --shadow-sm:    0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md:    0 4px 24px rgba(0,0,0,0.08);
+      --shadow-lg:    0 16px 56px rgba(0,0,0,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--body);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: var(--shadow-md); }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-mark {
+      width: 32px; height: 32px;
+      background: var(--orange);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .nav-logo-text {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+
+    .btn-ghost {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--orange); color: var(--orange); }
+
+    .btn-orange {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      background: var(--orange);
+      border: none;
+      padding: 9px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-orange:hover {
+      background: var(--orange-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(255,92,53,0.35);
+    }
+
+    /* ── HERO ── */
+    .hero-wrap {
+      padding-top: 66px;
+      background: var(--body);
+    }
+
+    .hero {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 96px 60px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--orange-pale);
+      border: 1px solid rgba(255,92,53,0.2);
+      color: var(--orange-dark);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+      animation: blink 2s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 4.2vw, 52px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+    .hero h1 em { font-style: normal; color: var(--orange); }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 460px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .btn-orange-lg {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--white);
+      background: var(--orange);
+      border: none;
+      padding: 14px 32px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-orange-lg:hover {
+      background: var(--orange-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(255,92,53,0.35);
+    }
+
+    .btn-outline-lg {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ink);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 14px 32px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-outline-lg:hover { border-color: var(--orange); color: var(--orange); }
+
+    .hero-trust {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted-light);
+      flex-wrap: wrap;
+    }
+    .trust-check { color: var(--orange); font-weight: 700; }
+
+    /* Hero Visual — Dashboard */
+    .hero-visual { position: relative; padding: 20px 0 40px; }
+
+    .dashboard-card {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .dashboard-topbar {
+      background: var(--ink-2);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topbar-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #FF5F56; }
+    .dot-y { background: #FFBD2E; }
+    .dot-g { background: #27C93F; }
+    .topbar-label {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      font-weight: 500;
+    }
+
+    .dashboard-body { padding: 20px; }
+
+    .db-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .db-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .db-period {
+      font-size: 12px;
+      color: var(--muted-light);
+      background: var(--section-bg);
+      padding: 3px 10px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+    }
+
+    .db-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .db-metric {
+      background: var(--section-bg);
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid var(--border);
+    }
+    .db-metric-label { font-size: 11px; color: var(--muted-light); margin-bottom: 6px; font-weight: 500; }
+    .db-metric-value {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+    }
+    .db-metric-change {
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .db-metric-change.up { color: #16A34A; }
+    .db-metric-change.down { color: #DC2626; }
+
+    .db-bar-section { margin-bottom: 14px; }
+    .db-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .db-bar-track {
+      height: 6px;
+      background: var(--section-bg);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .db-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: var(--orange);
+    }
+
+    .db-hubs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .hub-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--section-bg);
+    }
+    .hub-tag.active { background: var(--orange-pale); color: var(--orange-dark); border-color: rgba(255,92,53,0.2); }
+
+    .float-card {
+      position: absolute;
+      background: var(--white);
+      border-radius: 10px;
+      padding: 10px 14px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink);
+      animation: floatY 3s ease-in-out infinite;
+    }
+    @keyframes floatY { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+    .float-top { top: 0; right: -16px; animation-delay: 0.4s; }
+    .float-bottom { bottom: 24px; left: -16px; animation-delay: 0.9s; }
+    .float-icon { font-size: 16px; }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: var(--ink-2);
+      margin-top: 60px;
+    }
+    .stats-bar-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: flex;
+      padding: 0 60px;
+    }
+    .stat-item {
+      flex: 1;
+      padding: 28px 20px;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.07);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+    .stat-number span { color: var(--orange); }
+    .stat-label { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+
+    /* ── PROBLEM ── */
+    .problem-section {
+      padding: 96px 60px;
+      background: var(--section-bg);
+    }
+    .problem-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .section-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 3vw, 40px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    .problem-intro {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+    .problem-intro strong { color: var(--ink); font-weight: 600; }
+
+    .problem-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .problem-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .problem-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--orange);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s;
+    }
+    .problem-card:hover { transform: translateX(4px); box-shadow: var(--shadow-sm); }
+    .problem-card:hover::before { transform: scaleY(1); }
+
+    .problem-card-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+    .problem-card-content {}
+    .problem-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .problem-card-text {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .problem-card-text strong { color: var(--ink-2); font-weight: 600; }
+
+    .problem-consequence {
+      margin-top: 24px;
+      background: #FFF5F3;
+      border: 1px solid rgba(255,92,53,0.2);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+    }
+    .consequence-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--orange-dark);
+      margin-bottom: 8px;
+    }
+    .consequence-text { font-size: 15px; color: var(--ink-2); line-height: 1.7; }
+    .consequence-text strong { color: var(--ink); font-weight: 600; }
+
+    /* Problem visual */
+    .problem-visual {}
+
+    .decision-tracker {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    .dt-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dt-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .dt-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: #FEF9C3;
+      color: #854D0E;
+    }
+    .dt-row {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .dt-row:last-child { border-bottom: none; }
+    .dt-row-icon { font-size: 16px; width: 24px; text-align: center; }
+    .dt-row-text { flex: 1; font-size: 13px; color: var(--muted); }
+    .dt-row-text strong { color: var(--ink); font-weight: 600; }
+    .dt-row-status {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .dt-row-status.red { background: #FEE2E2; color: #DC2626; }
+    .dt-row-status.yellow { background: #FEF9C3; color: #854D0E; }
+    .dt-row-status.grey { background: var(--section-bg); color: var(--muted); }
+
+    .fragmented-tools {
+      margin-top: 16px;
+      background: var(--section-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+    }
+    .ft-label { font-size: 11px; font-weight: 600; color: var(--muted-light); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+    .ft-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .ft-tool {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* ── SOLUTION ── */
+    .solution-section {
+      padding: 96px 60px;
+      background: var(--white);
+      text-align: center;
+    }
+    .solution-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .solution-inner .section-title { margin-bottom: 16px; }
+    .solution-inner p {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 12px;
+    }
+    .solution-inner p strong { color: var(--ink); font-weight: 600; }
+    .solution-highlight {
+      display: inline-block;
+      margin-top: 24px;
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: -0.3px;
+    }
+
+    /* ── FEATURES ── */
+    .features-section {
+      padding: 96px 60px;
+      background: var(--section-bg);
+    }
+    .features-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+    .features-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .features-header .section-title { max-width: 480px; margin-bottom: 0; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s;
+    }
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--orange);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(255,92,53,0.2);
+    }
+    .feature-card:hover::after { transform: scaleX(1); }
+
+    .feature-icon-wrap {
+      width: 48px; height: 48px;
+      background: var(--orange-pale);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 10px;
+      letter-spacing: -0.2px;
+    }
+
+    .feature-card p { font-size: 15px; color: var(--muted); line-height: 1.7; }
+
+    /* ── SOCIAL PROOF ── */
+    .proof-section {
+      padding: 96px 60px;
+      background: var(--ink-2);
+    }
+    .proof-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+    .proof-inner .section-eyebrow { color: var(--orange); }
+    .proof-inner .section-title { color: var(--white); margin-bottom: 16px; }
+
+    .proof-stat {
+      font-size: 16px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 48px;
+      max-width: 560px;
+    }
+    .proof-stat strong { color: var(--white); font-weight: 600; }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 36px;
+      transition: all 0.25s;
+    }
+    .testimonial-card:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,92,53,0.3);
+      transform: translateY(-3px);
+    }
+
+    .quote-mark {
+      font-family: var(--font-display);
+      font-size: 52px;
+      font-weight: 800;
+      color: var(--orange);
+      opacity: 0.4;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .testimonial-card blockquote {
+      font-size: 15px;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.78;
+      font-style: italic;
+      margin-bottom: 28px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .author-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange), #FF9F7A);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .author-name { font-weight: 600; font-size: 14px; color: var(--white); }
+    .author-role { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 96px 60px;
+      background: var(--white);
+    }
+    .cta-inner { max-width: 1160px; margin: 0 auto; }
+
+    .cta-card {
+      background: var(--orange);
+      border-radius: 20px;
+      padding: 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 50%;
+    }
+    .cta-card::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -80px;
+      width: 300px; height: 300px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+
+    .cta-content { position: relative; z-index: 1; }
+
+    .cta-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 20px;
+    }
+
+    .cta-bridge {
+      font-size: 18px;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+
+    .cta-card h2 {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 4vw, 48px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .cta-tagline {
+      font-family: var(--font-display);
+      font-size: clamp(18px, 2.5vw, 26px);
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: -0.5px;
+      margin-bottom: 40px;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-cta-white {
+      background: var(--white);
+      color: var(--orange-dark);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 15px 36px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    .btn-cta-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+
+    .btn-cta-outline {
+      background: transparent;
+      color: var(--white);
+      font-size: 16px;
+      font-weight: 500;
+      padding: 15px 36px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.35);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    .btn-cta-outline:hover { border-color: rgba(255,255,255,0.7); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink-3);
+      padding: 28px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
+    footer p span { color: var(--orange); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 72px 24px 0; gap: 48px; }
+      .hero-visual { display: none; }
+      .stats-bar-inner { padding: 0 24px; flex-wrap: wrap; }
+      .stat-item { flex: 0 0 50%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .problem-section { padding: 64px 24px; }
+      .problem-inner { grid-template-columns: 1fr; gap: 48px; }
+      .problem-visual { display: none; }
+      .solution-section { padding: 64px 24px; }
+      .features-section { padding: 64px 24px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .proof-section { padding: 64px 24px; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .cta-section { padding: 64px 24px; }
+      .cta-card { padding: 48px 28px; }
+      footer { padding: 24px; flex-direction: column; text-align: center; }
+      .footer-links { justify-content: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; }
+      .badge-dot { animation: none; }
+      .float-card { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-mark">🟠</div>
+      <span class="nav-logo-text">HubSpot</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Products</a></li>
+      <li><a href="#">Solutions</a></li>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">Enterprise</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="#" class="btn-ghost">Sign in</a>
+      <a href="#" class="btn-orange">Talk to Sales</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrap">
+    <div class="hero">
+      <div>
+        <div class="hero-badge reveal">
+          <span class="badge-dot"></span>
+          Enterprise Marketing Platform
+        </div>
+        <h1 class="reveal reveal-delay-1">
+          The operating system for <em>growth-minded</em> marketing organizations.
+        </h1>
+        <p class="hero-sub reveal reveal-delay-2">
+          Connect every tool, conversation, and outcome — turning scattered efforts into measurable growth and executive confidence.
+        </p>
+        <div class="hero-actions reveal reveal-delay-3">
+          <a href="#" class="btn-orange-lg">Get Started Free</a>
+          <a href="#" class="btn-outline-lg">Talk to Sales</a>
+        </div>
+        <div class="hero-trust reveal reveal-delay-4">
+          <span class="trust-check">✓</span> No setup fees &nbsp;·&nbsp;
+          <span class="trust-check">✓</span> Free CRM included &nbsp;·&nbsp;
+          <span class="trust-check">✓</span> 1,700+ integrations
+        </div>
+      </div>
+
+      <div class="hero-visual reveal reveal-delay-2">
+        <div style="position: relative; padding: 20px;">
+          <div class="dashboard-card">
+            <div class="dashboard-topbar">
+              <span class="topbar-dot dot-r"></span>
+              <span class="topbar-dot dot-y"></span>
+              <span class="topbar-dot dot-g"></span>
+              <span class="topbar-label">Marketing Hub — Q2 Dashboard</span>
+            </div>
+            <div class="dashboard-body">
+              <div class="db-header">
+                <span class="db-title">Revenue Attribution</span>
+                <span class="db-period">Last 30 days</span>
+              </div>
+              <div class="db-metrics">
+                <div class="db-metric">
+                  <div class="db-metric-label">Revenue</div>
+                  <div class="db-metric-value">$2.4M</div>
+                  <div class="db-metric-change up">↑ 18% vs last month</div>
+                </div>
+                <div class="db-metric">
+                  <div class="db-metric-label">MQLs</div>
+                  <div class="db-metric-value">1,847</div>
+                  <div class="db-metric-change up">↑ 24% vs last month</div>
+                </div>
+                <div class="db-metric">
+                  <div class="db-metric-label">Conv. Rate</div>
+                  <div class="db-metric-value">4.2%</div>
+                  <div class="db-metric-change down">↓ 0.3% vs last month</div>
+                </div>
+              </div>
+              <div class="db-bar-section">
+                <div class="db-bar-label"><span>Email campaigns</span><span>78%</span></div>
+                <div class="db-bar-track"><div class="db-bar-fill" style="width:78%"></div></div>
+              </div>
+              <div class="db-bar-section">
+                <div class="db-bar-label"><span>Organic search (AEO)</span><span>61%</span></div>
+                <div class="db-bar-track"><div class="db-bar-fill" style="width:61%; background: #FF9F7A;"></div></div>
+              </div>
+              <div class="db-bar-section">
+                <div class="db-bar-label"><span>Paid social</span><span>43%</span></div>
+                <div class="db-bar-track"><div class="db-bar-fill" style="width:43%; background: #FFCDB8;"></div></div>
+              </div>
+              <div class="db-hubs">
+                <span class="hub-tag active">Marketing Hub</span>
+                <span class="hub-tag active">Sales Hub</span>
+                <span class="hub-tag">Service Hub</span>
+                <span class="hub-tag">Content Hub</span>
+                <span class="hub-tag">Data Hub</span>
+                <span class="hub-tag">Commerce Hub</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="float-card float-top">
+            <span class="float-icon">📈</span>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#111">Board report ready</div>
+              <div style="font-size:10px;color:#9B9B9B">ROI proven · Export now</div>
+            </div>
+          </div>
+
+          <div class="float-card float-bottom">
+            <span class="float-icon">🤖</span>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#111">AI forecast updated</div>
+              <div style="font-size:10px;color:#9B9B9B">+$340K projected next quarter</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stats-bar-inner">
+        <div class="stat-item reveal">
+          <div class="stat-number">300<span>K+</span></div>
+          <div class="stat-label">Businesses worldwide</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-1">
+          <div class="stat-number">1,700<span>+</span></div>
+          <div class="stat-label">App integrations</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-2">
+          <div class="stat-number">6</div>
+          <div class="stat-label">Connected hubs</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-3">
+          <div class="stat-number">#<span>1</span></div>
+          <div class="stat-label">CRM platform globally</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROBLEM -->
+  <div class="problem-section">
+    <div class="problem-inner">
+      <div>
+        <p class="section-eyebrow reveal">The cost of the wrong decision</p>
+        <h2 class="section-title reveal">Making the wrong decision doesn't create one problem.</h2>
+        <p class="problem-intro reveal">It creates several. And in leadership, they compound — quietly at first, then very visibly.</p>
+
+        <div class="problem-cards">
+          <div class="problem-card reveal">
+            <span class="problem-card-icon">📉</span>
+            <div class="problem-card-content">
+              <div class="problem-card-title">Revenue & Missed Targets</div>
+              <p class="problem-card-text">Growth slows. Campaigns underperform. Revenue targets begin to slip. <strong>Spending continues, but the returns no longer justify the investment.</strong></p>
+            </div>
+          </div>
+          <div class="problem-card reveal reveal-delay-1">
+            <span class="problem-card-icon">💸</span>
+            <div class="problem-card-content">
+              <div class="problem-card-title">Budget Under Pressure</div>
+              <p class="problem-card-text">You planned, you were confident, you promised, and you proposed. But now <strong>the money is looking like it should have been spent somewhere else</strong> — and there's disappointment on your boss's face.</p>
+            </div>
+          </div>
+          <div class="problem-card reveal reveal-delay-2">
+            <span class="problem-card-icon">⚙️</span>
+            <div class="problem-card-content">
+              <div class="problem-card-title">Execution Suffers</div>
+              <p class="problem-card-text">The talent is there. The ideas are there. But <strong>teams are working across disconnected tools, scattered information, and separate systems</strong> that make collaboration harder than it needs to be.</p>
+            </div>
+          </div>
+          <div class="problem-card reveal reveal-delay-3">
+            <span class="problem-card-icon">❓</span>
+            <div class="problem-card-content">
+              <div class="problem-card-title">Uncertainty at the Top</div>
+              <p class="problem-card-text">You've built the strategy. You've made the decision. But <strong>proving to the board that it works becomes a smaller problem when you haven't convinced yourself.</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="problem-visual reveal reveal-delay-1">
+        <div class="decision-tracker">
+          <div class="dt-header">
+            <span class="dt-title">📋 Q2 Marketing Review</span>
+            <span class="dt-badge">Needs attention</span>
+          </div>
+          <div class="dt-row">
+            <span class="dt-row-icon">📊</span>
+            <span class="dt-row-text"><strong>Campaign ROI</strong> — Board presentation tomorrow</span>
+            <span class="dt-row-status red">Not ready</span>
+          </div>
+          <div class="dt-row">
+            <span class="dt-row-icon">👥</span>
+            <span class="dt-row-text"><strong>Sales alignment</strong> — MQL handoff unclear</span>
+            <span class="dt-row-status yellow">At risk</span>
+          </div>
+          <div class="dt-row">
+            <span class="dt-row-icon">📧</span>
+            <span class="dt-row-text"><strong>Email sequence</strong> — 3 tools, no single view</span>
+            <span class="dt-row-status red">Fragmented</span>
+          </div>
+          <div class="dt-row">
+            <span class="dt-row-icon">📈</span>
+            <span class="dt-row-text"><strong>Revenue attribution</strong> — data in 4 systems</span>
+            <span class="dt-row-status grey">Untracked</span>
+          </div>
+        </div>
+
+        <div class="fragmented-tools">
+          <div class="ft-label">Tools your team juggles daily</div>
+          <div class="ft-grid">
+            <div class="ft-tool">📧 <span>Mailchimp</span></div>
+            <div class="ft-tool">📊 <span>Sheets</span></div>
+            <div class="ft-tool">💬 <span>Slack</span></div>
+            <div class="ft-tool">📋 <span>Notion</span></div>
+            <div class="ft-tool">📅 <span>Calendar</span></div>
+            <div class="ft-tool">📁 <span>Drive</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLUTION -->
+  <div class="solution-section">
+    <div class="solution-inner">
+      <p class="section-eyebrow reveal">Enter HubSpot</p>
+      <h2 class="section-title reveal">One system solves these problems — and more.</h2>
+      <p class="reveal"><strong>HubSpot is the operating system for marketing organizations that prioritize growth.</strong></p>
+      <p class="reveal">It brings teams, tools, and data together around one goal — turning scattered efforts into measurable growth.</p>
+      <span class="solution-highlight reveal">One platform. Complete clarity. Confident decisions.</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features-section">
+    <div class="features-inner">
+      <div class="features-header">
+        <div>
+          <p class="section-eyebrow reveal">What HubSpot gives you</p>
+          <h2 class="section-title reveal">Built for the complexity of enterprise marketing.</h2>
+        </div>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon-wrap">🔗</div>
+          <h3>One Connected Platform</h3>
+          <p>Connect Marketing, Sales, Customer Service, Content, Data, and Commerce in one workspace, all powered by HubSpot's Smart CRM.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon-wrap">🔍</div>
+          <h3>Be Found Where AI Searches</h3>
+          <p>Stay visible where customers are searching. HubSpot's AEO tools help you create content, generate leads, and optimize for AI-powered search platforms like ChatGPT and Perplexity.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon-wrap">⚡</div>
+          <h3>Win Back Your Team's Time</h3>
+          <p>Plan campaigns, launch initiatives, and nurture leads from one place. With AI-powered automation and personalized email marketing, your team spends less time repeating tasks and more time driving growth.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-3">
+          <div class="feature-icon-wrap">📊</div>
+          <h3>Analytics that Justify Decisions</h3>
+          <p>Know what's working and what isn't. Track the metrics that matter, identify high-performing campaigns, and use AI-powered forecasting to make smarter decisions before problems become expensive.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOCIAL PROOF -->
+  <div class="proof-section">
+    <div class="proof-inner">
+      <p class="section-eyebrow reveal">Trusted at scale</p>
+      <h2 class="section-title reveal">What enterprise leaders are saying.</h2>
+      <p class="proof-stat reveal">Join over <strong>300,000 businesses</strong> — including some of the world's fastest-growing brands — using HubSpot to drive growth and scale their operations.</p>
+      <div class="testimonials-grid">
+        <div class="testimonial-card reveal">
+          <div class="quote-mark">"</div>
+          <blockquote>Before HubSpot, my team and I had too many cracks that let leads fall through. With HubSpot's deal pipelines and CRM integration, we could literally see where every lead was in the buying process — and act before it was too late.</blockquote>
+          <div class="testimonial-author">
+            <div class="author-avatar">MH</div>
+            <div>
+              <div class="author-name">Matthew Hallerman</div>
+              <div class="author-role">CMO · Hybo International</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal reveal-delay-1">
+          <div class="quote-mark">"</div>
+          <blockquote>Sending emails in the right sequence, at the right time, was a constant struggle for my team. HubSpot automated the entire process, with notifications and reminders built in. What used to require manual effort now runs itself.</blockquote>
+          <div class="testimonial-author">
+            <div class="author-avatar">CC</div>
+            <div>
+              <div class="author-name">Cynthia Collins</div>
+              <div class="author-role">Marketing Director · Hyper Corp</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-inner">
+      <div class="cta-card reveal">
+        <div class="cta-content">
+          <p class="cta-eyebrow">Get started today</p>
+          <p class="cta-bridge">Great decisions start with one system that sees the full picture.</p>
+          <h2>One platform. Complete clarity.<br/>Confident decisions.</h2>
+          <p class="cta-tagline">Let your decisions represent you in every meeting.</p>
+          <div class="cta-actions">
+            <a href="#" class="btn-cta-white">Get Started Free</a>
+            <a href="#" class="btn-cta-outline">Talk to Sales</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 HubSpot, Inc. All rights reserved. &nbsp;·&nbsp; Spec work by <span>Ike</span> — Copywriting Portfolio</p>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Developers</a>
+      <a href="#">Support</a>
+    </div>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+</body>
+</html>
